@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
                 {
                     while (auxSecondFlight != NULL)
                     {
-                        if(strcmp(auxFirstFlight->arrival, auxSecondFlight->departure) == 0 && isEarlier(auxFirstFlight->departTime, auxSecondFlight->departTime))
+                        if(strcmp(auxFirstFlight->arrival, auxSecondFlight->departure) == 0 && isEarlier(auxFirstFlight->arrivalTime, auxSecondFlight->departTime))
                         {
                             route = buildItinerary(route, auxFirstFlight, auxSecondFlight, NULL, NULL);
                         }
