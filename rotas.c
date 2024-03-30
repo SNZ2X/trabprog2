@@ -73,51 +73,32 @@ void printFlight(VOOS *aux)
     {
     printf("%s %s %02d:%02d %s %02d:%02d\n", aux->flightCode, aux->departure, aux->departTime[HOUR], aux->departTime[MINUTE], aux->arrival, aux->arrivalTime[HOUR], aux->arrivalTime[MINUTE]);}
 }
-VOOS *timeCompare(VOOS *top, VOOS *curr, char* choice)
+VOOS* timeCompare(VOOS *top, VOOS *curr, char *choice)
 {
     VOOS *newNode = copyFlight(NULL, curr);
-    if(strcmp("-TC",choice) == 0)
+    if (top == NULL)
     {
-    /*If the list is empty or curr's departure time is earlier than the top node's, insert curr at the top of the list*/ 
-    if (top == NULL || curr->departTime[HOUR] < top->departTime[HOUR] || (curr->departTime[HOUR] == top->departTime[HOUR] && curr->departTime[MINUTE] < top->departTime[MINUTE]))
+        newNode->next = top;
+        top = newNode;
+    }
+    else if (isEarlier(top, curr) == 0 && strcmp(choice, "-TC")== 0)
     {
         newNode->next = top;
         top = newNode;
     }
     else
     {
-        /*Locate the node before the point of insertion*/ 
         VOOS* aux = top;
-        while (aux->next != NULL && (curr->departTime[HOUR] > aux->next->departTime[HOUR] || (curr->departTime[HOUR] == aux->next->departTime[HOUR] && curr->departTime[MINUTE] > aux->next->departTime[MINUTE])))
+        while (aux->next != NULL && isEarlier(curr, aux->next) == 1)
         {
             aux = aux->next;
         }
         newNode->next = aux->next;
         aux->next = newNode;
-    }
-    }
-    else
-    {
-    /*If the list is empty or curr's departure time is later than the top node's, insert curr at the top of the list*/ 
-    if (top == NULL || curr->departTime[HOUR] > top->departTime[HOUR] || (curr->departTime[HOUR] == top->departTime[HOUR] && curr->departTime[MINUTE] > top->departTime[MINUTE]))
-    {
-        newNode->next = top;
-        top = newNode;
-    }
-    else
-    {
-        /*Locate the node before the point of insertion*/ 
-        VOOS* aux = top;
-        while (aux->next != NULL && (curr->departTime[HOUR] < aux->next->departTime[HOUR] || (curr->departTime[HOUR] == aux->next->departTime[HOUR] && curr->departTime[MINUTE] < aux->next->departTime[MINUTE])))
-        {
-            aux = aux->next;
-        }
-        newNode->next = aux->next;
-        aux->next = newNode;
-    }
     }
     return top;
 }
+
 VOOS *copyFlight(VOOS *top, VOOS *curr)
 {
     if(top!=NULL)
@@ -182,4 +163,16 @@ ITINERARY *pushItinerary(ITINERARY *top, ITINERARY *curr)
     curr->next = top;
     top = curr;
     return top;
+}
+int isEarlier(VOOS *flight1, VOOS *flight2)
+{
+    if (flight1->departTime[HOUR] < flight2->departTime[HOUR] || 
+        (flight1->departTime[HOUR] == flight2->departTime[HOUR] && flight1->departTime[MINUTE] < flight2->departTime[MINUTE]))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }

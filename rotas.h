@@ -32,3 +32,4 @@ ITINERARY *newElementItinerary(void);
 void writeItinerary(ITINERARY *top);
 void freeItinerary(ITINERARY *top);
 ITINERARY *pushItinerary(ITINERARY *top, ITINERARY *curr);
+int isEarlier(VOOS *flight1, VOOS *flight2);

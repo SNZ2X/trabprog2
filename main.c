@@ -121,6 +121,55 @@ int main(int argc, char *argv[])
             }
             else{printf("Inválido.");}
         }
+        if(strcmp(argv[3],"-L") == 0 && strcmp(argv[4],"1") == 0)
+        {
+            if (strcmp(argv[5],"-TC") == 0)
+            {
+                ITINERARY *route = startStackItinerary();
+                VOOS *topVoo = startStackFlight();
+                VOOS *auxFirstFlight;
+                VOOS *topFirstFlight = startStackFlight();
+                VOOS *topSecondFlight = startStackFlight();
+                VOOS *auxSecondFlight;
+                topVoo = readFlight(topVoo);
+                auxFirstFlight=topVoo;
+                auxSecondFlight=topVoo;
+                while(auxFirstFlight!=NULL)
+                {
+                    auxFirstFlight = findFlight(auxFirstFlight,argv[1],"\0");
+                    if(auxFirstFlight==NULL){break;}
+                    topFirstFlight = copyFlight(topFirstFlight, auxFirstFlight);
+                    auxFirstFlight = auxFirstFlight->next;
+                }
+                while(auxSecondFlight!=NULL)
+                {
+                    auxSecondFlight = findFlight(auxSecondFlight,"\0",argv[2]);
+                    if(auxSecondFlight==NULL){break;}
+                    topSecondFlight = copyFlight(topSecondFlight, auxSecondFlight);
+                    auxSecondFlight = auxSecondFlight->next;
+                }
+                auxFirstFlight = topFirstFlight;
+                auxSecondFlight = topSecondFlight;
+                while (auxFirstFlight != NULL)
+                {
+                    while (auxSecondFlight != NULL)
+                    {
+                        if(strcmp(auxFirstFlight->arrival, auxSecondFlight->departure) == 0 && isEarlier(auxFirstFlight, auxSecondFlight))
+                        {
+                            route = buildItinerary(route, auxFirstFlight, auxSecondFlight, NULL, NULL);
+                        }
+                        auxSecondFlight = auxSecondFlight->next;
+                    }
+                    auxSecondFlight = topSecondFlight;
+                    auxFirstFlight = auxFirstFlight->next;   
+                }   
+                writeItinerary(route);
+                freeFlight(topVoo);
+                freeFlight(topFirstFlight);
+                freeFlight(topSecondFlight);
+                freeItinerary(route);  
+            }
+        }
     }
 
 return 0;    
