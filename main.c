@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
                     matchedFlights = copyFlight(matchedFlights,aux);
                     aux = aux->next;
                 }
-                
+
                 writeFlight(matchedFlights);
                 freeFlight(topVoo);
                 freeFlight(matchedFlights);   
@@ -58,27 +58,38 @@ int main(int argc, char *argv[])
                 auxSecondFlight=topVoo;
                 while(auxFirstFlight!=NULL)
                 {
-                    auxFirstFlight = findFlight(auxFirstFlight, argv[1], "\0");
-                    if (auxFirstFlight == NULL) 
-                    {
-                        break;
-                    }
-                    while(auxSecondFlight!=NULL)
-                    {
-                        auxSecondFlight = findFlight(auxSecondFlight, auxFirstFlight->arrival, argv[2]);
-                        if (auxSecondFlight == NULL) 
-                        {
-                            break;
-                        }
-                        route = pushItinerary(route,buildItinerary(auxFirstFlight,auxSecondFlight,NULL,NULL));
-                        auxSecondFlight = auxSecondFlight->next;
-                    }
+                    auxFirstFlight = findFlight(auxFirstFlight,argv[1],"\0");
+                    if(auxFirstFlight==NULL){break;}
+                    topFirstFlight = copyFlight(topFirstFlight, auxFirstFlight);
                     auxFirstFlight = auxFirstFlight->next;
                 }
+                while(auxSecondFlight!=NULL)
+                {
+                    auxSecondFlight = findFlight(auxSecondFlight,"\0",argv[2]);
+                    if(auxSecondFlight==NULL){break;}
+                    topSecondFlight = copyFlight(topSecondFlight, auxSecondFlight);
+                    auxSecondFlight = auxSecondFlight->next;
+                }
+                auxFirstFlight = topFirstFlight;
+                auxSecondFlight = topSecondFlight;
+                while (auxFirstFlight != NULL)
+                {
+                    while (auxSecondFlight != NULL)
+                    {
+                        if(strcmp(auxFirstFlight->arrival, auxSecondFlight->departure) == 0)
+                        {
+                            route = buildItinerary(route, auxFirstFlight, auxSecondFlight, NULL, NULL);
+                        }
+                        auxSecondFlight = auxSecondFlight->next;
+                    }
+                    auxSecondFlight = topSecondFlight;
+                    auxFirstFlight = auxFirstFlight->next;   
+                }   
                 writeItinerary(route);
-                freeItinerary(route);
+                freeFlight(topVoo);
                 freeFlight(topFirstFlight);
                 freeFlight(topSecondFlight);
+                freeItinerary(route);
             }
         }
     }

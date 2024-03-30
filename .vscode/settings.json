@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "aeroportos.h": "c",
+        "math.h": "c",
+        "rotas.h": "c"
+    }
+}

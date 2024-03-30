@@ -56,8 +56,11 @@ VOOS *findFlight(VOOS *top, char *departure, char *arrival)
         {
             return aux;
         }
-        else
-        if(strcmp(aux->departure, departure) == 0 && strcmp(aux->arrival, "\0") == 0)
+        if(strcmp(aux->departure, departure) == 0 && strcmp(arrival, "\0") == 0)
+        {
+            return aux;
+        }
+        if(strcmp(departure, "\0") == 0 && strcmp(aux->arrival, arrival) == 0)
         {
             return aux;
         }
@@ -66,12 +69,9 @@ VOOS *findFlight(VOOS *top, char *departure, char *arrival)
 }
 void printFlight(VOOS *aux)
 {
-        if(aux == NULL)
+    if(aux!=NULL)
     {
-        printf("Error: null pointer passed to printFlight\n");
-        return;
-    }
-    printf("%s %s %02d:%02d %s %02d:%02d\n", aux->flightCode, aux->departure, aux->departTime[HOUR], aux->departTime[MINUTE], aux->arrival, aux->arrivalTime[HOUR], aux->arrivalTime[MINUTE]);
+    printf("%s %s %02d:%02d %s %02d:%02d\n", aux->flightCode, aux->departure, aux->departTime[HOUR], aux->departTime[MINUTE], aux->arrival, aux->arrivalTime[HOUR], aux->arrivalTime[MINUTE]);}
 }
 VOOS *timeCompare(VOOS *top, VOOS *curr, char* choice)
 {
@@ -140,13 +140,14 @@ ITINERARY *startStackItinerary(void)
 {
     return (ITINERARY*)NULL;
 }
-ITINERARY *buildItinerary(VOOS *one, VOOS *two, VOOS *three, VOOS *four)
+ITINERARY *buildItinerary(ITINERARY *route,VOOS *one, VOOS *two, VOOS *three, VOOS *four)
 {
     ITINERARY *curr = newElementItinerary();
     curr->flightOne = one;
     curr->flightTwo = two;
     curr->flightThree = three;
     curr->flightFour = four;
+    curr->next = route;
     return curr;
 }
 ITINERARY *newElementItinerary(void)
@@ -160,10 +161,10 @@ void writeItinerary(ITINERARY *top)
     for(;aux != NULL;aux = aux->next)
     {
         printf("ITINERÁRIO %d\n", n);
-        printFlight(top->flightOne);
-        printFlight(top->flightTwo);
-        printFlight(top->flightThree);
-        printFlight(top->flightFour);
+        printFlight(aux->flightOne);
+        printFlight(aux->flightTwo);
+        printFlight(aux->flightThree);
+        printFlight(aux->flightFour);
         n++;
     }
 }

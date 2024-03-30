@@ -27,7 +27,7 @@ void printFlight(VOOS *aux);
 VOOS *copyFlight(VOOS *top, VOOS *curr);
 VOOS *timeCompare(VOOS *top, VOOS *curr, char *choice);
 ITINERARY *startStackItinerary(void);
-ITINERARY *buildItinerary(VOOS *one, VOOS *two, VOOS *three, VOOS *four);
+ITINERARY *buildItinerary(ITINERARY *route, VOOS *one, VOOS *two, VOOS *three, VOOS *four);
 ITINERARY *newElementItinerary(void);
 void writeItinerary(ITINERARY *top);
 void freeItinerary(ITINERARY *top);
