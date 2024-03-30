@@ -81,7 +81,7 @@ VOOS* timeCompare(VOOS *top, VOOS *curr, char *choice)
         newNode->next = top;
         top = newNode;
     }
-    else if (isEarlier(top, curr) == 0 && strcmp(choice, "-TC")== 0)
+    else if (isEarlier(top->departTime, curr->departTime) == 0 && strcmp(choice, "-TC")== 0)
     {
         newNode->next = top;
         top = newNode;
@@ -89,7 +89,7 @@ VOOS* timeCompare(VOOS *top, VOOS *curr, char *choice)
     else
     {
         VOOS* aux = top;
-        while (aux->next != NULL && isEarlier(curr, aux->next) == 1)
+        while (aux->next != NULL && isEarlier(curr->departTime, aux->next->departTime) == 1)
         {
             aux = aux->next;
         }
@@ -164,10 +164,10 @@ ITINERARY *pushItinerary(ITINERARY *top, ITINERARY *curr)
     top = curr;
     return top;
 }
-int isEarlier(VOOS *flight1, VOOS *flight2)
+int isEarlier(int *time1, int *time2)
 {
-    if (flight1->departTime[HOUR] < flight2->departTime[HOUR] || 
-        (flight1->departTime[HOUR] == flight2->departTime[HOUR] && flight1->departTime[MINUTE] < flight2->departTime[MINUTE]))
+    if (time1[HOUR] < time2[HOUR] || 
+        (time1[HOUR] == time2[HOUR] && time1[MINUTE] < time2[MINUTE]))
     {
         return 1;
     }
