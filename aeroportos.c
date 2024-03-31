@@ -58,3 +58,26 @@ void freeAero(AEROPORTOS *top)
         free(top);
     }
 }
+double distanceCalc(AEROPORTOS *aero1, AEROPORTOS *aero2)
+{
+    double intProd;
+    double angle;
+    double norm;
+    if(aero1 == NULL || aero2 == NULL){return 0;}
+    intProd = (aero1->x * aero2->x) + (aero1->y * aero2->y) + (aero1->z * aero2->z);
+    norm = (sqrt(aero1->x*aero1->x + aero1->y*aero1->y + aero1->z*aero1->z)*sqrt(aero2->x*aero2->x + aero2->y*aero2->y + aero2->z*aero2->z));
+    angle = acos(intProd/norm);
+    return (Ro * angle);
+}
+AEROPORTOS *findAero(AEROPORTOS *top, char *IATA)
+{
+    AEROPORTOS *aux = top;
+    for(;aux!=NULL; aux = aux->next)
+    {
+        if (strcmp(aux->iata, IATA) == 0)
+        {
+            return aux;
+        }
+    }
+    return NULL;
+}

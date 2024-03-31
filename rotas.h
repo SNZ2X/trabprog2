@@ -1,5 +1,6 @@
 #define HOUR 0
 #define MINUTE 1
+#include "aeroportos.h"
 typedef struct VOO 
 {
     char flightCode[6];
@@ -14,7 +15,7 @@ typedef struct itinerario
     VOOS *flightOne;
     VOOS *flightTwo;
     VOOS *flightThree;
-    VOOS *flightFour;
+    float distance;
     struct itinerario *next;
 }ITINERARY;
 void writeFlight(VOOS *top);
@@ -27,9 +28,12 @@ void printFlight(VOOS *aux);
 VOOS *copyFlight(VOOS *top, VOOS *curr);
 VOOS *timeCompare(VOOS *top, VOOS *curr, char *choice);
 ITINERARY *startStackItinerary(void);
-ITINERARY *buildItinerary(ITINERARY *route, VOOS *one, VOOS *two, VOOS *three, VOOS *four);
+ITINERARY *buildItinerary(ITINERARY *route, VOOS *one, VOOS *two, VOOS *three, AEROPORTOS *topAero);
 ITINERARY *newElementItinerary(void);
-void writeItinerary(ITINERARY *top);
+void writeItinerary(ITINERARY *top, char *dist);
 void freeItinerary(ITINERARY *top);
 ITINERARY *pushItinerary(ITINERARY *top, ITINERARY *curr);
 int isEarlier(int *time1, int *time2);
+ITINERARY *returnSmallest(ITINERARY *top);
+double flightDistance(VOOS *voo, AEROPORTOS *aeroTop);
+void printItinerary(ITINERARY *itinerary);

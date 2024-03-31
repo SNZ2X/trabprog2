@@ -1,4 +1,3 @@
-#include "aeroportos.h"
 #include "rotas.h"
 int main(int argc, char *argv[])
 {
@@ -11,7 +10,7 @@ int main(int argc, char *argv[])
             writeAero(topAero);
             freeAero(topAero);
         }
-        if (strcmp(argv[1],"-voos") == 0)
+        else if (strcmp(argv[1],"-voos") == 0)
         {
             VOOS *topVoo = startStackFlight();
             topVoo = readFlight(topVoo);
@@ -19,7 +18,7 @@ int main(int argc, char *argv[])
             freeFlight(topVoo);
         }
     }
-    if (argc == 5)
+    else if (argc == 5)
     {
         if(strcmp(argv[3],"-L") == 0)
         {
@@ -45,7 +44,7 @@ int main(int argc, char *argv[])
                 freeFlight(topVoo);
                 freeFlight(matchedFlights);   
             }
-            if(strcmp(argv[4],"1") == 0)
+            else if(strcmp(argv[4],"1") == 0)
             {
                 ITINERARY *route = startStackItinerary();
                 VOOS *topVoo = startStackFlight();
@@ -85,7 +84,7 @@ int main(int argc, char *argv[])
                     auxSecondFlight = topSecondFlight;
                     auxFirstFlight = auxFirstFlight->next;   
                 }   
-                writeItinerary(route);
+                writeItinerary(route, "j");
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);
                 freeFlight(topSecondFlight);
@@ -93,7 +92,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-    if (argc == 6)
+    else if (argc == 6)
     {
         if(strcmp(argv[3],"-L") == 0 && strcmp(argv[4],"0") == 0)
         {
@@ -121,7 +120,7 @@ int main(int argc, char *argv[])
             }
             else{printf("Inválido.");}
         }
-        if(strcmp(argv[3],"-L") == 0 && strcmp(argv[4],"1") == 0)
+        else if(strcmp(argv[3],"-L") == 0 && strcmp(argv[4],"1") == 0)
         {
             if (strcmp(argv[5],"-TC") == 0)
             {
@@ -163,7 +162,7 @@ int main(int argc, char *argv[])
                     auxSecondFlight = topSecondFlight;
                     auxFirstFlight = auxFirstFlight->next;   
                 }   
-                writeItinerary(route);
+                writeItinerary(route, "j");
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);
                 freeFlight(topSecondFlight);
@@ -171,6 +170,97 @@ int main(int argc, char *argv[])
             }
         }
     }
-
+    else if (argc == 7)
+    {
+        if(strcmp(argv[3],"-L") == 0)
+        {
+            if (strcmp(argv[5],"-TC") == 0)
+            {
+                if (strcmp(argv[6],"-D") == 0)
+                {
+                    if(strcmp(argv[4],"0") == 0)
+                    {
+                        ITINERARY *route = startStackItinerary();
+                        AEROPORTOS *topAero = startStackAero();
+                        VOOS *topVoo = startStackFlight();
+                        VOOS *aux;
+                        VOOS *conditionFlightTop = startStackFlight();
+                        topAero = readAero(topAero);
+                        topVoo = readFlight(topVoo);
+                        aux = topVoo;
+                        while(aux!=NULL)
+                        {
+                            aux = findFlight(aux, argv[1], argv[2]);
+                            if (aux == NULL) 
+                            {
+                                break;
+                            }   
+                            conditionFlightTop = timeCompare(conditionFlightTop, aux, argv[5]);
+                            route = buildItinerary(route, conditionFlightTop, NULL, NULL, topAero);
+                            aux = aux->next;
+                        }
+                        writeItinerary(route,"-D");
+                        freeItinerary(route);
+                        freeAero(topAero);
+                        freeFlight(topVoo);
+                        freeFlight(conditionFlightTop);
+                    }
+                    else if (strcmp(argv[4], "1") ==0)
+                    {
+                        ITINERARY *route = startStackItinerary();
+                        ITINERARY *smallest = startStackItinerary();
+                        AEROPORTOS *topAero = startStackAero();
+                        VOOS *topVoo = startStackFlight();
+                        VOOS *auxFirstFlight;
+                        VOOS *topFirstFlight = startStackFlight();
+                        VOOS *topSecondFlight = startStackFlight();
+                        VOOS *auxSecondFlight;
+                        topAero = readAero(topAero);
+                        topVoo = readFlight(topVoo);
+                        auxFirstFlight=topVoo;
+                        auxSecondFlight=topVoo;
+                        while(auxFirstFlight!=NULL)
+                        {
+                            auxFirstFlight = findFlight(auxFirstFlight,argv[1],"\0");
+                            if(auxFirstFlight==NULL){break;}
+                            topFirstFlight = copyFlight(topFirstFlight, auxFirstFlight);
+                            auxFirstFlight = auxFirstFlight->next;
+                        }
+                        while(auxSecondFlight!=NULL)
+                        {
+                            auxSecondFlight = findFlight(auxSecondFlight,"\0",argv[2]);
+                            if(auxSecondFlight==NULL){break;}
+                            topSecondFlight = copyFlight(topSecondFlight, auxSecondFlight);
+                            auxSecondFlight = auxSecondFlight->next;
+                        }
+                        auxFirstFlight = topFirstFlight;
+                        auxSecondFlight = topSecondFlight;
+                        while (auxFirstFlight != NULL)
+                        {
+                            while (auxSecondFlight != NULL)
+                            {
+                                if(strcmp(auxFirstFlight->arrival, auxSecondFlight->departure) == 0 && isEarlier(auxFirstFlight->arrivalTime, auxSecondFlight->departTime))
+                                {
+                                    route = buildItinerary(route, auxFirstFlight, auxSecondFlight, NULL, topAero);
+                                }
+                                auxSecondFlight = auxSecondFlight->next;
+                            }
+                            auxSecondFlight = topSecondFlight;
+                            auxFirstFlight = auxFirstFlight->next;   
+                        }
+                        smallest = returnSmallest(route);    
+                        printf("ITINERÁRIO 1\n");
+                        printItinerary(smallest);
+                        freeFlight(topVoo);
+                        freeAero(topAero);
+                        freeFlight(topFirstFlight);
+                        freeFlight(topSecondFlight);
+                        freeItinerary(route);
+                    }
+                }                   
+            }
+            else{printf("Inválido.");}
+        }
+    }
 return 0;    
 }

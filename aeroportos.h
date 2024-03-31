@@ -29,4 +29,5 @@ void writeAero(AEROPORTOS *top);
 AEROPORTOS *readAero(AEROPORTOS *aeros);
 AEROPORTOS *startStackAero(void);
 AEROPORTOS *newElementAero(void);
-
+double distanceCalc(AEROPORTOS *aero1, AEROPORTOS *aero2);
+AEROPORTOS *findAero(AEROPORTOS *top, char *IATA);

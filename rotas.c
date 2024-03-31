@@ -121,33 +121,32 @@ ITINERARY *startStackItinerary(void)
 {
     return (ITINERARY*)NULL;
 }
-ITINERARY *buildItinerary(ITINERARY *route,VOOS *one, VOOS *two, VOOS *three, VOOS *four)
+ITINERARY *buildItinerary(ITINERARY *route, VOOS *one, VOOS *two, VOOS *three, AEROPORTOS *top)
 {
     ITINERARY *curr = newElementItinerary();
     curr->flightOne = one;
     curr->flightTwo = two;
     curr->flightThree = three;
-    curr->flightFour = four;
     curr->next = route;
+    if (two == NULL){curr->distance = flightDistance(one, top);}
+    else if (three == NULL){curr->distance = flightDistance(one, top) + flightDistance(two, top);}
+    else {curr->distance = flightDistance(one, top) + flightDistance(two, top) + flightDistance(three, top);}
     return curr;
 }
 ITINERARY *newElementItinerary(void)
 {
     return malloc(sizeof(ITINERARY));
 }
-void writeItinerary(ITINERARY *top)
+void writeItinerary(ITINERARY *top, char *dist)
 {
     ITINERARY *aux = top;
     int n=1;
-    for(;aux != NULL;aux = aux->next)
-    {
-        printf("ITINERÁRIO %d\n", n);
-        printFlight(aux->flightOne);
-        printFlight(aux->flightTwo);
-        printFlight(aux->flightThree);
-        printFlight(aux->flightFour);
-        n++;
-    }
+        for(;aux != NULL;aux = aux->next)
+        {
+            printf("ITINERÁRIO %d\n", n);
+            printItinerary(aux);
+            n++;
+        }
 }
 void freeItinerary(ITINERARY *top)
 {
@@ -175,4 +174,27 @@ int isEarlier(int *time1, int *time2)
     {
         return 0;
     }
+}
+ITINERARY *returnSmallest(ITINERARY *top)
+{
+    ITINERARY *aux;
+    ITINERARY *smallest;
+    if(top == NULL){return NULL;}
+    smallest = top;
+    aux = top;
+    for(;aux!=NULL; aux = aux->next)
+    {
+        if(aux->distance<smallest->distance){smallest=aux;}
+    }
+    return smallest;
+}
+double flightDistance(VOOS *voo, AEROPORTOS *aeroTop)
+{
+    return (distanceCalc(findAero(aeroTop, voo->departure), findAero(aeroTop, voo->arrival)));
+}
+void printItinerary(ITINERARY *itinerary)
+{
+    printFlight(itinerary->flightOne);
+    printFlight(itinerary->flightTwo);
+    printFlight(itinerary->flightThree);
 }
