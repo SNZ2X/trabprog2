@@ -384,6 +384,73 @@ int main(int argc, char *argv[])
                         freeFlight(topSecondFlight);
                         freeItinerary(route);
                     }
+                    else if(strcmp(argv[4],"2") == 0)
+                    {
+                    ITINERARY *route = startStackItinerary();
+                    ITINERARY *smallest = startStackItinerary();
+                    AEROPORTOS *topAero = startStackAero();
+                    VOOS *topVoo = startStackFlight();
+                    VOOS *auxFirstFlight, *auxSecondFlight, *auxThirdFlight;
+                    VOOS *topFirstFlight = startStackFlight();
+                    VOOS *topSecondFlight = startStackFlight();
+                    VOOS *topThirdFlight = startStackFlight();
+                    topAero = readAero(topAero);
+                    topVoo = readFlight(topVoo);
+                    auxFirstFlight = auxSecondFlight = auxThirdFlight = topVoo;
+                    while(auxFirstFlight!=NULL)
+                    {
+                        auxFirstFlight = findFlight(auxFirstFlight,argv[1],"\0");
+                        if(auxFirstFlight==NULL){break;}
+                        topFirstFlight = copyFlight(topFirstFlight, auxFirstFlight);
+                        auxFirstFlight = auxFirstFlight->next;
+                    }
+                    while(auxSecondFlight!=NULL)
+                    {
+                        if(auxSecondFlight==NULL){break;}
+                        topSecondFlight = copyFlight(topSecondFlight, auxSecondFlight);
+                        auxSecondFlight = auxSecondFlight->next;
+                    }
+                    while(auxThirdFlight!=NULL)
+                    {
+                        auxThirdFlight = findFlight(auxThirdFlight,"\0",argv[2]);
+                        if(auxThirdFlight==NULL){break;}
+                        topThirdFlight = copyFlight(topThirdFlight, auxThirdFlight);
+                        auxThirdFlight = auxThirdFlight->next;
+                    }
+                    auxFirstFlight = topFirstFlight;
+                    auxSecondFlight = topSecondFlight;
+                    auxThirdFlight = topThirdFlight;
+                    while (auxFirstFlight != NULL)
+                    {
+                        while (auxSecondFlight != NULL)
+                        {
+                            if(strcmp(auxFirstFlight->arrival, auxSecondFlight->departure) == 0)
+                            {
+                                while (auxThirdFlight != NULL)
+                                {
+                                    if(strcmp(auxSecondFlight->arrival, auxThirdFlight->departure) == 0 && strcmp(auxFirstFlight->departure,auxSecondFlight->arrival) && strcmp(argv[2],auxFirstFlight->arrival) && isEarlier(auxFirstFlight->arrivalTime,auxSecondFlight->departTime) && isEarlier(auxSecondFlight->arrivalTime,auxThirdFlight->departTime))
+                                    {
+                                        route = buildItinerary(route, auxFirstFlight, auxSecondFlight, auxThirdFlight, topAero);
+                                    }
+                                    auxThirdFlight = auxThirdFlight->next;
+                                }
+                                auxThirdFlight = topThirdFlight;
+                            }
+                            auxSecondFlight = auxSecondFlight->next;
+                        }
+                        auxSecondFlight = topSecondFlight;
+                        auxFirstFlight = auxFirstFlight->next;   
+                    }   
+                    smallest = returnSmallest(route);
+                    printf("ITINERÁRIO 1\n");
+                    printItinerary(smallest);
+                    freeFlight(topVoo);
+                    freeAero(topAero);
+                    freeFlight(topFirstFlight);
+                    freeFlight(topSecondFlight);
+                    freeFlight(topThirdFlight);
+                    freeItinerary(route);   
+                    }
                 }                   
             }
             else{printf("Inválido.");}
