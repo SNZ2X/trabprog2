@@ -179,15 +179,38 @@ int isEarlier(int *time1, int *time2)
 ITINERARY *returnSmallest(ITINERARY *top)
 {
     ITINERARY *aux;
-    ITINERARY *smallest;
+    ITINERARY *newNode;
+    ITINERARY *topDist = startStackItinerary();
+    float distance;
     if(top == NULL){return NULL;}
-    smallest = top;
     aux = top;
+    distance = top->distance;
     for(;aux!=NULL; aux = aux->next)
     {
-        if(aux->distance<smallest->distance){smallest=aux;}
+        if(aux->distance < distance){distance=aux->distance;}
     }
-    return smallest;
+    aux=top;
+    for (; aux!=NULL; aux = aux->next)
+    {
+        if (aux->distance == distance)
+        {
+            if (topDist == NULL)
+            {
+                newNode = newElementItinerary();
+                *newNode = *aux;
+                newNode->next = NULL;
+                topDist = newNode;
+            }
+            else
+            {
+                newNode = newElementItinerary();
+                *newNode = *aux;
+                newNode->next = topDist;
+                topDist = newNode;
+            }
+        }
+    }
+    return topDist;
 }
 double flightDistance(VOOS *voo, AEROPORTOS *aeroTop)
 {
@@ -199,15 +222,15 @@ void printItinerary(ITINERARY *itinerary)
     printFlight(itinerary->flightTwo);
     printFlight(itinerary->flightThree);
 }
-ITINERARY *reOrder(ITINERARY *route)
+ITINERARY *reOrder(ITINERARY *route,char *order)
 {
-        if (route == NULL || route->next == NULL) {
+if (route == NULL || route->next == NULL) {
         return route;
     }
-
     ITINERARY *current = route;
     while (current->next != NULL) {
-        if (isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) {
+        if ((strcmp(order, "-TC") == 0 && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) ||
+            (strcmp(order, "-TC") && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime) == 0)) {
             break;
         }
         current = current->next;
@@ -225,7 +248,8 @@ ITINERARY *reOrder(ITINERARY *route)
         prev = NULL;
 
         while (current->next != NULL) {
-            if (isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) {
+            if ((strcmp(order, "-TC") == 0 && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) ||
+                (strcmp(order, "-TC") && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime) == 0)) {
                 ITINERARY *temp = current->next;
                 current->next = temp->next;
 
@@ -246,4 +270,3 @@ ITINERARY *reOrder(ITINERARY *route)
 
     return route;
 }
-
