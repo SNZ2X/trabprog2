@@ -313,30 +313,32 @@ int main(int argc, char *argv[])
                 {
                     if(strcmp(argv[4],"0") == 0)
                     {
-                        ITINERARY *route = startStackItinerary();
-                        AEROPORTOS *topAero = startStackAero();
-                        VOOS *topVoo = startStackFlight();
-                        VOOS *aux;
-                        VOOS *conditionFlightTop = startStackFlight();
-                        topAero = readAero(topAero);
-                        topVoo = readFlight(topVoo);
-                        aux = topVoo;
-                        while(aux!=NULL)
+                    VOOS *topVoo = startStackFlight();
+                    ITINERARY *route = startStackItinerary();
+                    ITINERARY *smallest = startStackItinerary();
+                    VOOS *aux;
+                    VOOS *conditionFlightTop = startStackFlight();
+                    topVoo = readFlight(topVoo);
+                    aux = topVoo;
+                    
+                    while(aux!=NULL)
+                    {
+                        aux = findFlight(aux, argv[1], argv[2]);
+                        if (aux == NULL) 
                         {
-                            aux = findFlight(aux, argv[1], argv[2]);
-                            if (aux == NULL) 
-                            {
-                                break;
-                            }   
-                            conditionFlightTop = timeCompare(conditionFlightTop, aux, argv[5]);
-                            route = buildItinerary(route, conditionFlightTop, NULL, NULL, topAero);
-                            aux = aux->next;
+                            break;
                         }
-                        writeItinerary(route,"-D");
-                        freeItinerary(route);
-                        freeAero(topAero);
-                        freeFlight(topVoo);
-                        freeFlight(conditionFlightTop);
+                        conditionFlightTop = timeCompare(conditionFlightTop, aux, argv[5]);
+                        aux = aux->next;
+                    }
+                    aux = conditionFlightTop;
+                    for(;aux!=NULL;aux = aux->next)
+                    {route = buildItinerary(route,aux,NULL,NULL,NULL);}
+                    smallest = returnSmallest(route);
+                    printItinerary(smallest);
+                    freeFlight(topVoo);
+                    freeFlight(conditionFlightTop);
+                    freeItinerary(route); 
                     }
                     else if (strcmp(argv[4], "1") ==0)
                     {
@@ -381,9 +383,12 @@ int main(int argc, char *argv[])
                             auxSecondFlight = topSecondFlight;
                             auxFirstFlight = auxFirstFlight->next;   
                         }
-                        smallest = returnSmallest(route);    
-                        printf("ITINERÁRIO 1\n");
-                        printItinerary(smallest);
+                        smallest = returnSmallest(route);
+                        if(smallest!=NULL)
+                        {
+                            printf("ITINERÁRIO 1");
+                            printItinerary(smallest);
+                        }
                         freeFlight(topVoo);
                         freeAero(topAero);
                         freeFlight(topFirstFlight);
@@ -448,8 +453,12 @@ int main(int argc, char *argv[])
                         auxFirstFlight = auxFirstFlight->next;   
                     }   
                     smallest = returnSmallest(route);
-                    printf("ITINERÁRIO 1\n");
-                    printItinerary(smallest);
+                    
+                    if(smallest!=NULL)
+                    {
+                        printf("ITINERÁRIO 1\n");
+                        printItinerary(smallest);
+                    }
                     freeFlight(topVoo);
                     freeAero(topAero);
                     freeFlight(topFirstFlight);
