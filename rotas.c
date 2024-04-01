@@ -199,3 +199,51 @@ void printItinerary(ITINERARY *itinerary)
     printFlight(itinerary->flightTwo);
     printFlight(itinerary->flightThree);
 }
+ITINERARY *reOrder(ITINERARY *route)
+{
+        if (route == NULL || route->next == NULL) {
+        return route;
+    }
+
+    ITINERARY *current = route;
+    while (current->next != NULL) {
+        if (isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) {
+            break;
+        }
+        current = current->next;
+    }
+
+    if (current->next == NULL) {
+        return route;
+    }
+
+    ITINERARY *prev = NULL;
+    int swapped;
+    do {
+        swapped = 0;
+        current = route;
+        prev = NULL;
+
+        while (current->next != NULL) {
+            if (isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) {
+                ITINERARY *temp = current->next;
+                current->next = temp->next;
+
+                if (prev == NULL) {
+                    route = temp;
+                } else {
+                    prev->next = temp;
+                }
+                temp->next = current;
+                prev = temp;
+                swapped = 1;
+            } else {
+                prev = current;
+                current = current->next;
+            }
+        }
+    } while (swapped);
+
+    return route;
+}
+

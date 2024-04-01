@@ -229,7 +229,8 @@ int main(int argc, char *argv[])
                     }
                     auxSecondFlight = topSecondFlight;
                     auxFirstFlight = auxFirstFlight->next;   
-                }   
+                }
+                route = reOrder(route);   
                 writeItinerary(route, "j");
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);
@@ -293,7 +294,8 @@ int main(int argc, char *argv[])
                     }
                     auxSecondFlight = topSecondFlight;
                     auxFirstFlight = auxFirstFlight->next;   
-                }   
+                }
+                route = reOrder(route);   
                 writeItinerary(route, "j");
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);

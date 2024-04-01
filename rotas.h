@@ -37,3 +37,4 @@ int isEarlier(int *time1, int *time2);
 ITINERARY *returnSmallest(ITINERARY *top);
 double flightDistance(VOOS *voo, AEROPORTOS *aeroTop);
 void printItinerary(ITINERARY *itinerary);
+ITINERARY *reOrder(ITINERARY *route);
