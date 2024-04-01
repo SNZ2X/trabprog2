@@ -7,10 +7,11 @@
 void freeFlight(VOOS *top)
 {
     VOOS* aux = top;
-    for(;top!=NULL;top = aux)
+    while(top != NULL)
     {
-        aux = top->next;
-        free(top);
+        aux = top;
+        top = top->next;
+        free(aux);
     }
 }
 void writeFlight(VOOS *top)
@@ -81,7 +82,7 @@ VOOS* timeCompare(VOOS *top, VOOS *curr, char *choice)
         newNode->next = top;
         top = newNode;
     }
-    else if (isEarlier(top->departTime, curr->departTime) == 0 && strcmp(choice, "-TC")== 0)
+    else if (isEarlier(top->departTime, curr->departTime) == 0 && strcmp(choice, "-TD")== 0)
     {
         newNode->next = top;
         top = newNode;

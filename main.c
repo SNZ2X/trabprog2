@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
                 VOOS *topVoo = startStackFlight();
                 VOOS *matchedFlights = startStackFlight();
                 VOOS *aux;
+                ITINERARY *route = startStackItinerary();
                 topVoo = readFlight(topVoo);
                 aux = topVoo;
                 while(aux!=NULL)
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
                     matchedFlights = copyFlight(matchedFlights,aux);
                     aux = aux->next;
                 }
-
+                
                 writeFlight(matchedFlights);
                 freeFlight(topVoo);
                 freeFlight(matchedFlights);   
@@ -161,6 +162,7 @@ int main(int argc, char *argv[])
             if (strcmp(argv[5],"-TC") == 0 || strcmp(argv[5],"-TD") == 0)
             {
                     VOOS *topVoo = startStackFlight();
+                    ITINERARY *route = startStackItinerary();
                     VOOS *aux;
                     VOOS *conditionFlightTop = startStackFlight();
                     topVoo = readFlight(topVoo);
@@ -176,9 +178,13 @@ int main(int argc, char *argv[])
                         conditionFlightTop = timeCompare(conditionFlightTop, aux, argv[5]);
                         aux = aux->next;
                     }
-                        writeFlight(conditionFlightTop);
-                        freeFlight(topVoo);
-                        freeFlight(conditionFlightTop);                   
+                    aux = conditionFlightTop;
+                    for(;aux!=NULL;aux = aux->next)
+                    {route = buildItinerary(route,aux,NULL,NULL,NULL);}
+                    writeItinerary(route, "j");
+                    freeFlight(topVoo);
+                    freeFlight(conditionFlightTop);
+                    freeItinerary(route);                   
             }
             else{printf("Inválido.");}
         }
