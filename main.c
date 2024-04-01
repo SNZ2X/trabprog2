@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
                 VOOS *topVoo = startStackFlight();
                 VOOS *matchedFlights = startStackFlight();
                 VOOS *aux;
-                ITINERARY *route = startStackItinerary();
                 topVoo = readFlight(topVoo);
                 aux = topVoo;
                 /*PROCURA DOS VOOS*/
@@ -385,6 +384,7 @@ int main(int argc, char *argv[])
                         freeFlight(topVoo);
                         freeFlight(conditionFlightTop);
                         freeItinerary(route); 
+                        freeItinerary(smallest);
                     }
                     else if (strcmp(argv[4], "1") ==0)
                     {

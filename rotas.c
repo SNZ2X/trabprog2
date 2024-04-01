@@ -99,7 +99,6 @@ VOOS* timeCompare(VOOS *top, VOOS *curr, char *choice)
     }
     return top;
 }
-
 VOOS *copyFlight(VOOS *top, VOOS *curr)
 {
     if(top!=NULL)
@@ -157,12 +156,6 @@ void freeItinerary(ITINERARY *top)
         aux = top->next;
         free(top);
     }
-}
-ITINERARY *pushItinerary(ITINERARY *top, ITINERARY *curr)
-{
-    curr->next = top;
-    top = curr;
-    return top;
 }
 int isEarlier(int *time1, int *time2)
 {
@@ -224,10 +217,14 @@ void printItinerary(ITINERARY *itinerary)
 }
 ITINERARY *reOrder(ITINERARY *route,char *order)
 {
-if (route == NULL || route->next == NULL) {
+    ITINERARY *current;
+    ITINERARY *prev;
+    int swapped;
+    if (route == NULL || route->next == NULL) {
         return route;
     }
-    ITINERARY *current = route;
+    prev = NULL;
+    current = route;
     while (current->next != NULL) {
         if ((strcmp(order, "-TC") == 0 && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) ||
             (strcmp(order, "-TC") && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime) == 0)) {
@@ -239,9 +236,6 @@ if (route == NULL || route->next == NULL) {
     if (current->next == NULL) {
         return route;
     }
-
-    ITINERARY *prev = NULL;
-    int swapped;
     do {
         swapped = 0;
         current = route;
