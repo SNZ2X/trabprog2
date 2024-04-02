@@ -120,9 +120,8 @@ ITINERARY *newElementItinerary(void);
  * Função para imprimir os itinerários da lista.
  * 
  * @param top O ponteiro para o topo da lista de itinerários.
- * @param dist A distância total dos itinerários.
  */
-void writeItinerary(ITINERARY *top, char *dist);
+void writeItinerary(ITINERARY *top);
 
 /**
  * Função para libertar a memória alocada para a lista de itinerários.

@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
                     auxFirstFlight = auxFirstFlight->next;   
                 }   
                 /*ESCRITA DO ITINERARIO E SUBSEQUENTE LIBERTACAO DE MEMORIA*/
-                writeItinerary(route, "j");
+                writeItinerary(route);
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);
                 freeFlight(topSecondFlight);
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
                     auxFirstFlight = auxFirstFlight->next;   
                 }   
                 /*ESCRITA DO ITINERARIO E LIBERTACAO DE MEMORIA*/
-                writeItinerary(route, "j");
+                writeItinerary(route);
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);
                 freeFlight(topSecondFlight);
@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
                     {route = buildItinerary(route,aux,NULL,NULL,NULL);}
                     route = reOrder(route, argv[5]);
                     /*ESCRITA DO ITINERARIO E LIBERTACAO DE MEMORIA*/
-                    writeItinerary(route, "j");
+                    writeItinerary(route);
                     freeFlight(topVoo);
                     freeFlight(conditionFlightTop);
                     freeItinerary(route);                   
@@ -211,9 +211,9 @@ int main(int argc, char *argv[])
         }
         else if(strcmp(argv[3],"-L") == 0 && strcmp(argv[4],"1") == 0)
         {
-            if (strcmp(argv[5],"-TC") == 0)
+            if (strcmp(argv[5],"-TC") == 0||strcmp(argv[5],"-TD")==0)
             {
-                /*-L 1 -TC*/
+                /*-L 1 -TC/-TD*/
                 /*INICIALIZACAO DAS VARIAVEIS*/
                 ITINERARY *route = startStackItinerary();
                 VOOS *topVoo = startStackFlight();
@@ -258,9 +258,9 @@ int main(int argc, char *argv[])
                     auxFirstFlight = auxFirstFlight->next;   
                 }
                 /*REORDENACAO POR TEMPO DE PARTIDA CRESCENTE*/
-                route = reOrder(route,"-TC");
+                route = reOrder(route,argv[5]);
                 /*ESCRITA E SUBSEQUENTE LIBERTACAO DE MEMORIA*/   
-                writeItinerary(route, "j");
+                writeItinerary(route);
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);
                 freeFlight(topSecondFlight);
@@ -269,9 +269,9 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[3], "-L") == 0 && strcmp(argv[4],"2") == 0)
         {
-            if (strcmp(argv[5],"-TC") == 0)
+            if (strcmp(argv[5],"-TC") == 0||strcmp(argv[5],"-TD")==0)
             {
-                /*-L 2 -TC*/
+                /*-L 2 -TC/-TD*/
                 /*INICIALIZACAO DAS VARIAVEIS*/
                 ITINERARY *route = startStackItinerary();
                 VOOS *topVoo = startStackFlight();
@@ -329,9 +329,9 @@ int main(int argc, char *argv[])
                     auxFirstFlight = auxFirstFlight->next;   
                 }
                 /*REORDENACAO DA ROTA POR TEMPO DE PARTIDA CRESCENTE*/
-                route = reOrder(route,"-TC"); 
+                route = reOrder(route,argv[5]); 
                 /*ESCRITA DO ITINERARIO DA ROTA E SUBSEQUENTE LIBERTACAO DE MEMORIA*/  
-                writeItinerary(route, "j");
+                writeItinerary(route);
                 freeFlight(topVoo);
                 freeFlight(topFirstFlight);
                 freeFlight(topSecondFlight);
@@ -344,13 +344,13 @@ int main(int argc, char *argv[])
     {
         if(strcmp(argv[3],"-L") == 0)
         {
-            if (strcmp(argv[5],"-TC") == 0)
+            if (strcmp(argv[5],"-TC") == 0 || strcmp(argv[5],"-TD") == 0)
             {
                 if (strcmp(argv[6],"-D") == 0)
                 {
                     if(strcmp(argv[4],"0") == 0)
                     {
-                        /*./rotas2024 partida chegada -L 0 -TC -D*/
+                        /*./rotas2024 partida chegada -L 0 -TC/-TD -D*/
                         /*InicializaCAo das variAveis*/
                         VOOS *topVoo = startStackFlight();
                         ITINERARY *route = startStackItinerary();
@@ -378,9 +378,9 @@ int main(int argc, char *argv[])
                         {route = buildItinerary(route,aux,NULL,NULL,NULL);}
                         /*PROCURA DAS VIAGENS COM MENOR DISTANCIA E REORDENACAO POR ORDEM DE PARTIDA*/
                         smallest = returnSmallest(route);
-                        smallest = reOrder(smallest, "-TC");
+                        smallest = reOrder(smallest, argv[5]);
                         /*IMPRESSAO E LIMPEZA DA MEMORIA*/
-                        writeItinerary(smallest,"-d");
+                        writeItinerary(smallest);
                         freeFlight(topVoo);
                         freeFlight(conditionFlightTop);
                         freeItinerary(route); 
@@ -388,7 +388,7 @@ int main(int argc, char *argv[])
                     }
                     else if (strcmp(argv[4], "1") ==0)
                     {
-                        /*./rotas2024 partida chegada -L 1 -TC -D*/
+                        /*./rotas2024 partida chegada -L 1 -TC/-TD -D*/
                         /*INICIALIZACAO DAS VARIAVEIS*/
                         ITINERARY *route = startStackItinerary();
                         ITINERARY *smallest = startStackItinerary();
@@ -437,9 +437,9 @@ int main(int argc, char *argv[])
                         }
                         /*RETORNO DOS ITINERARIOS COM MENOR DISTANCIA E REORDENACAO POR ORDEM DE PARTIDA*/
                         smallest = returnSmallest(route);
-                        smallest = reOrder(smallest,"-TC");
+                        smallest = reOrder(smallest,argv[5]);
                         /*IMPRESSAO E LIMPEZA DA MEMORIA*/
-                        writeItinerary(smallest,"-d");
+                        writeItinerary(smallest);
                         freeFlight(topVoo);
                         freeAero(topAero);
                         freeFlight(topFirstFlight);
@@ -449,7 +449,7 @@ int main(int argc, char *argv[])
                     }
                     else if(strcmp(argv[4],"2") == 0)
                     {
-                    /*./rotas2024 partida chegada -L 2 -TC -D*/
+                    /*./rotas2024 partida chegada -L 2 -TC/-TD -D*/
                     /*INICIALIZACAO DAS VARIAVEIS*/
                     ITINERARY *route = startStackItinerary();
                     ITINERARY *smallest = startStackItinerary();
@@ -512,9 +512,9 @@ int main(int argc, char *argv[])
                     }   
                     /*PROCURA DOS ITINERARIOS COM A MENOR DISTANCIA REORDENACAO DOS VOOS POR ORDEM DE PARTIDA*/
                     smallest = returnSmallest(route);
-                    smallest = reOrder(smallest,"-TC");
+                    smallest = reOrder(smallest,argv[5]);
                     /*ESCRITA DO ITINERARIO*/
-                    writeItinerary(smallest,"-d");
+                    writeItinerary(smallest);
                     /*LIBERTACAO DA MEMORIA*/
                     freeFlight(topVoo);
                     freeAero(topAero);

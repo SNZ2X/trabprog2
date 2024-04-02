@@ -137,7 +137,7 @@ ITINERARY *newElementItinerary(void)
 {
     return malloc(sizeof(ITINERARY));
 }
-void writeItinerary(ITINERARY *top, char *dist)
+void writeItinerary(ITINERARY *top)
 {
     ITINERARY *aux = top;
     int n=1;
@@ -215,35 +215,28 @@ void printItinerary(ITINERARY *itinerary)
     printFlight(itinerary->flightTwo);
     printFlight(itinerary->flightThree);
 }
-ITINERARY *reOrder(ITINERARY *route,char *order)
-{
+ITINERARY *reOrder(ITINERARY *route, char *order) {
     ITINERARY *current;
     ITINERARY *prev;
     int swapped;
     if (route == NULL || route->next == NULL) {
         return route;
     }
-    prev = NULL;
-    current = route;
-    while (current->next != NULL) {
-        if ((strcmp(order, "-TC") == 0 && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) ||
-            (strcmp(order, "-TC") && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime) == 0)) {
-            break;
-        }
-        current = current->next;
-    }
 
-    if (current->next == NULL) {
-        return route;
-    }
     do {
         swapped = 0;
         current = route;
         prev = NULL;
 
         while (current->next != NULL) {
-            if ((strcmp(order, "-TC") == 0 && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) ||
-                (strcmp(order, "-TC") && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime) == 0)) {
+            int shouldSwap = 0;
+            if (strcmp(order, "-TC") == 0 && isEarlier(current->next->flightOne->departTime, current->flightOne->departTime)) {
+                shouldSwap = 1;
+            } else if (strcmp(order, "-TD") == 0 && isEarlier(current->flightOne->departTime, current->next->flightOne->departTime)) {
+                shouldSwap = 1;
+            }
+
+            if (shouldSwap) {
                 ITINERARY *temp = current->next;
                 current->next = temp->next;
 
